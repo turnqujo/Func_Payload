@@ -92,35 +92,8 @@ namespace FuncPayload
         StopSound();
       }
 
-      if (isContested && (currentPayloadState != FORCE_MOVE && currentPayloadState != FORCE_WAIT))
-        RenderContestedLight();
-
       CleanUp();
       NextThink(self.pev.ltime + THINK_TIME, false);
-    }
-
-    void RenderContestedLight()
-    {
-      // TODO: this could be made into a point entity so placement / inclusion could be customizable
-      Vector vLightOrigin = self.pev.origin;
-      DynamicLight(vLightOrigin, 16, m_vEnemyGlowColor, 10, 1);
-    }
-
-    // TODO: Change the Color param to an actual color instead of Vector
-    void DynamicLight(Vector vecPos, int radius, Vector vColor, int8 life, int decay)
-    {
-      NetworkMessage THDL(MSG_PVS, NetworkMessages::SVC_TEMPENTITY);
-      THDL.WriteByte(TE_DLIGHT);
-      THDL.WriteCoord(vecPos.x);
-      THDL.WriteCoord(vecPos.y);
-      THDL.WriteCoord(vecPos.z);
-      THDL.WriteByte(radius); // NOTE: Will be multiplied by 10
-      THDL.WriteByte(int(vColor.x)); // Red
-      THDL.WriteByte(int(vColor.y)); // Green
-      THDL.WriteByte(int(vColor.z)); // Blue
-      THDL.WriteByte(life); // NOTE: Will be multiplied by 0.1
-      THDL.WriteByte(decay);
-      THDL.End();
     }
 
     private bool ShouldMove(bool isContested, bool isAssisted)
