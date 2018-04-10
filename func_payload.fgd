@@ -20,10 +20,10 @@
 
 @PointClass base(Targetname, Target) color(133 19 112) = trigger_payload_mode : "Trigger Payload Movement Mode"
 [
-	iMovementState(choices) : "Movement State" : 0 =
-	[
+  iMovementState(choices) : "Movement State" : 0 =
+  [
     0: "Normal"
-		1: "Force Move"
+    1: "Force Move"
     2: "Force Wait"
-	]
+  ]
 ]
