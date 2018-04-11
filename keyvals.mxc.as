@@ -9,8 +9,8 @@ namespace FuncPayload
     float m_flLength; // Wheels
     float m_flStartSpeed;
     float m_flBank;
-    bool m_bShouldFriendliesGlow = true;
-    bool m_bShouldEnemiesGlow = true;
+    bool m_bShouldFriendliesGlow;
+    bool m_bShouldEnemiesGlow;
     float m_flSpeedMultiplier = 1.0;
     uint m_uiSpeedMultiplierMax = 3;
     int m_sounds;

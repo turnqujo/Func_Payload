@@ -9,96 +9,54 @@ namespace FuncPayload
    */
   mixin class mxCInRangeManager
   {
+    array<CBaseMonster@> previousEntsInRange = array<CBaseMonster@>();
     array<CBaseMonster@> entsInRange = array<CBaseMonster@>();
-    string iHasBeenTouchedKey = "$i_hasBeenTouched";
 
     void HandleEntityInRange(CBaseMonster@ pEntityInRange, bool bIsFriendly)
     {
-      // TODO: Make customizable
-      if (bIsFriendly)
-        pEntityInRange.TakeHealth(1.0f, 1);
-
-      SetITouched(pEntityInRange, 1);
-
-      if (EntWasAlreadyInRange(pEntityInRange))
-        return;
-
-      if (bIsFriendly && m_bShouldFriendliesGlow)
-        StartGlow(pEntityInRange, true);
-
-      if (!bIsFriendly && m_bShouldEnemiesGlow)
-        StartGlow(pEntityInRange, false);
+      if (!EntWasAlreadyInRange(pEntityInRange))
+        StartGlow(pEntityInRange, bIsFriendly);
 
       entsInRange.insertLast(pEntityInRange);
     }
 
-    // BUG: Something in this function is causing the game to crash when a friendly in range is killed
     void CleanUp()
     {
-      for (uint i = 0; i < entsInRange.length(); i++)
+      for (uint i = 0; i < previousEntsInRange.length(); i++)
       {
-        CBaseMonster@ currentEnt = entsInRange[i];
-
-        if (currentEnt is null)
-        {
-          entsInRange.removeAt(i);
-          g_Game.AlertMessage(at_error, "Monster in the `entsInRange` collection was null somehow.\n");
-          continue;
-        }
-
-        if (!currentEnt.IsAlive())
-        {
-          StopGlow(currentEnt);
-          entsInRange.removeAt(i);
-          continue;
-        }
-
-        int iTouched = GetITouched(currentEnt);
-        if (iTouched == -1)
-        {
-          StopGlow(currentEnt);
-          entsInRange.removeAt(i);
-          g_Game.AlertMessage(at_error, "Monster was added to the `entsInRange` collection without setting iTouched first.\n");
-          continue;
-        }
-
-        if (iTouched == 0)
-        {
-          StopGlow(currentEnt);
-          entsInRange.removeAt(i);
-          continue;
-        }
-
-        SetITouched(currentEnt, 0);
+        if (!EntIsStillInRange(previousEntsInRange[i]))
+          StopGlow(previousEntsInRange[i]);
       }
-    }
 
-    private void SetITouched(CBaseMonster@ pMonster, const int value)
-    {
-    	CustomKeyvalues@ pCustomKeyValues = pMonster.GetCustomKeyvalues();
-    	pCustomKeyValues.SetKeyvalue(iHasBeenTouchedKey, value);
-    }
-
-    private int GetITouched(CBaseMonster@ pMonster)
-    {
-      CustomKeyvalues@ pCustomKeyvals = pMonster.GetCustomKeyvalues();
-      CustomKeyvalue pCustomKeyval = pCustomKeyvals.GetKeyvalue(iHasBeenTouchedKey);
-      return pCustomKeyval.Exists() ? pCustomKeyval.GetInteger() : -1;
+      previousEntsInRange = entsInRange;
+      entsInRange = array<CBaseMonster@>();
     }
 
     private bool EntWasAlreadyInRange(CBaseMonster@ pNeedleEnt)
     {
-      for (uint i = 0; i < entsInRange.length(); i++)
+      return FindEntInArray(pNeedleEnt, previousEntsInRange);
+    }
+
+    private bool EntIsStillInRange(CBaseMonster@ pNeedleEnt)
+    {
+      return FindEntInArray(pNeedleEnt, entsInRange);
+    }
+
+    private bool FindEntInArray(CBaseMonster@ pNeedleEnt, array<CBaseMonster@> haystack)
+    {
+      for (uint i = 0; i < haystack.length(); i++)
       {
-        if (entsInRange[i].opEquals(pNeedleEnt))
+        if (haystack[i].opEquals(pNeedleEnt))
           return true;
       }
-
       return false;
     }
 
     private void StartGlow(CBaseMonster@ pMonster, bool bIsFriendly)
     {
+      if ((bIsFriendly && !m_bShouldFriendliesGlow) || (!bIsFriendly && !m_bShouldEnemiesGlow))
+        return;
+
       pMonster.pev.rendermode = kRenderNormal;
       pMonster.pev.renderfx = kRenderFxGlowShell;
       pMonster.pev.renderamt = 4;
