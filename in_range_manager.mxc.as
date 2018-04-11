@@ -14,6 +14,7 @@ namespace FuncPayload
 
     void HandleEntityInRange(CBaseMonster@ pEntityInRange, bool bIsFriendly)
     {
+      // TODO: Make customizable
       if (bIsFriendly)
         pEntityInRange.TakeHealth(1.0f, 1);
 
@@ -31,6 +32,7 @@ namespace FuncPayload
       entsInRange.insertLast(pEntityInRange);
     }
 
+    // BUG: Something in this function is causing the game to crash when a friendly in range is killed
     void CleanUp()
     {
       for (uint i = 0; i < entsInRange.length(); i++)
@@ -39,7 +41,7 @@ namespace FuncPayload
 
         if (currentEnt is null)
         {
-          // NOTE: Unlikely to happen
+          entsInRange.removeAt(i);
           g_Game.AlertMessage(at_error, "Monster in the `entsInRange` collection was null somehow.\n");
           continue;
         }
@@ -54,8 +56,10 @@ namespace FuncPayload
         int iTouched = GetITouched(currentEnt);
         if (iTouched == -1)
         {
+          StopGlow(currentEnt);
+          entsInRange.removeAt(i);
           g_Game.AlertMessage(at_error, "Monster was added to the `entsInRange` collection without setting iTouched first.\n");
-          return;
+          continue;
         }
 
         if (iTouched == 0)
@@ -69,15 +73,15 @@ namespace FuncPayload
       }
     }
 
-    private void SetITouched(CBaseMonster@ ent, const int value)
+    private void SetITouched(CBaseMonster@ pMonster, const int value)
     {
-    	CustomKeyvalues@ cks = ent.GetCustomKeyvalues();
-    	cks.SetKeyvalue(iHasBeenTouchedKey, value);
+    	CustomKeyvalues@ pCustomKeyValues = pMonster.GetCustomKeyvalues();
+    	pCustomKeyValues.SetKeyvalue(iHasBeenTouchedKey, value);
     }
 
-    private int GetITouched(CBaseMonster@ ent)
+    private int GetITouched(CBaseMonster@ pMonster)
     {
-      CustomKeyvalues@ pCustomKeyvals = ent.GetCustomKeyvalues();
+      CustomKeyvalues@ pCustomKeyvals = pMonster.GetCustomKeyvalues();
       CustomKeyvalue pCustomKeyval = pCustomKeyvals.GetKeyvalue(iHasBeenTouchedKey);
       return pCustomKeyval.Exists() ? pCustomKeyval.GetInteger() : -1;
     }
