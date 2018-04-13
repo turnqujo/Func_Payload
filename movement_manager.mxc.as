@@ -17,7 +17,7 @@ namespace FuncPayload
 
     void MovePayloadToFirstTarget()
     {
-      @pCurrentPath = GetPathTrackByTarget(self.pev.target);
+      @pCurrentPath = GetPathTrackByTarget(pev.target);
       Vector vAdjustedDestination = pCurrentPath.pev.origin;
 
       // NOTE: Adjust for the "Height above track" property
@@ -25,12 +25,12 @@ namespace FuncPayload
       g_EntityFuncs.SetOrigin(self, vAdjustedDestination);
 
       // NOTE: This is done to ensure the payload is facing the direction expected by the angle calculations
-      self.pev.angles.y += 180;
+      pev.angles.y += 180;
     }
 
     void Next()
     {
-      Vector vDestination = self.pev.origin;
+      Vector vDestination = pev.origin;
       float flDistance = GetCurrentAdjustedSpeed() * THINK_TIME;
 
       // NOTE: Adjust for the "Height above track" property
@@ -38,14 +38,14 @@ namespace FuncPayload
       CPathTrack@ pNextPath = pCurrentPath.LookAhead(vDestination, vDestination, flDistance, false);
       vDestination.z += m_flHeight;
 
-      Vector vDelta = vDestination - self.pev.origin;
+      Vector vDelta = vDestination - pev.origin;
       Vector vAngles = Math.VecToAngles(vDelta);
 
       // NOTE: This is done to ensure the payload is facing the direction expected by the angle calculations
       vAngles.y += 180;
 
       if (pNextPath is null || (vDelta.x == 0 && vDelta.y == 0))
-        vAngles = self.pev.angles;
+        vAngles = pev.angles;
 
       // NOTE: At a dead end
       if (pNextPath is null)
@@ -57,15 +57,15 @@ namespace FuncPayload
 
       if (pNextPath != pCurrentPath)
       {
-        CPathTrack@ pFire = self.pev.speed >= 0 ? pNextPath : pCurrentPath;
+        CPathTrack@ pFire = pev.speed >= 0 ? pNextPath : pCurrentPath;
         FirePathTarget(pFire);
         UpdateSpeedsFromPath(pFire);
         @pCurrentPath = pNextPath;
       }
 
       // NOTE: Not sure what the significance of 10 is here
-      self.pev.velocity = (vDestination - self.pev.origin) * 10;
-      self.pev.avelocity = CalculateNewAngularVelocity(vAngles);
+      pev.velocity = (vDestination - pev.origin) * 10;
+      pev.avelocity = CalculateNewAngularVelocity(vAngles);
     }
 
     void FirePathTarget(CPathTrack@ pFire)
@@ -102,18 +102,18 @@ namespace FuncPayload
     Vector CalculateNewAngularVelocity(Vector vAngles)
     {
       float flNewX;
-      if(self.pev.SpawnFlagBitSet(SF_PAYLOAD_NOPITCH))
+      if(pev.SpawnFlagBitSet(SF_PAYLOAD_NOPITCH))
         flNewX = 0;
       else
-        flNewX = Math.AngleDistance(vAngles.x, self.pev.angles.x) * 10;
+        flNewX = Math.AngleDistance(vAngles.x, pev.angles.x) * 10;
 
       // TODO: Add custom keyval for maximum pitch
       flNewX = flNewX > 45 ? 45.0 : flNewX;
       flNewX = flNewX < -45 ? -45.0 : flNewX;
 
-      Vector vNewAVelocity = self.pev.avelocity;
+      Vector vNewAVelocity = pev.avelocity;
       vNewAVelocity.x = flNewX;
-      vNewAVelocity.y = Math.AngleDistance(vAngles.y, self.pev.angles.y) * 10;
+      vNewAVelocity.y = Math.AngleDistance(vAngles.y, pev.angles.y) * 10;
 
       if (m_flBank == 0)
         return vNewAVelocity;
@@ -125,34 +125,34 @@ namespace FuncPayload
       if (vNewAVelocity.y > 5)
         flBank = m_flBank;
 
-      vNewAVelocity.z = Math.AngleDistance(Math.ApproachAngle(flBank, self.pev.angles.z, m_flBank * 4), self.pev.angles.z) * 4;
+      vNewAVelocity.z = Math.AngleDistance(Math.ApproachAngle(flBank, pev.angles.z, m_flBank * 4), pev.angles.z) * 4;
       return vNewAVelocity;
     }
 
     // NOTE: This is when an entity is in front of the payload, not necessarily contested
     void Blocked(CBaseEntity@ pBlockingEnt)
     {
-      Vector vNormalizedTrajectory = (pBlockingEnt.pev.origin - self.pev.origin).Normalize();
+      Vector vNormalizedTrajectory = (pBlockingEnt.pev.origin - pev.origin).Normalize();
 
-      if (self.pev.dmg <= 0)
+      if (pev.dmg <= 0)
       {
         pBlockingEnt.pev.velocity = vNormalizedTrajectory * 150;
         return;
       }
 
-      pBlockingEnt.pev.velocity = vNormalizedTrajectory * self.pev.dmg;
-      pBlockingEnt.TakeDamage(self.pev, self.pev, self.pev.dmg, DMG_CRUSH);
+      pBlockingEnt.pev.velocity = vNormalizedTrajectory * pev.dmg;
+      pBlockingEnt.TakeDamage(pev, pev, pev.dmg, DMG_CRUSH);
     }
 
     // NOTE: For legacy support, ignores max speed limit
     void ForceSetSpeed(float flNewSpeed)
     {
-      self.pev.speed = flNewSpeed;
+      pev.speed = flNewSpeed;
     }
 
     void SetSpeed(float flNewSpeed)
     {
-      self.pev.speed = Math.min(flNewSpeed, local_flMaxSpeed);
+      pev.speed = Math.min(flNewSpeed, local_flMaxSpeed);
     }
 
     void SetMaxSpeed(float flNewMaxSpeed)
@@ -169,13 +169,13 @@ namespace FuncPayload
 
     float GetCurrentAdjustedSpeed()
     {
-      return Math.min(self.pev.speed * local_flSpeedMultiplier, local_flMaxSpeed);
+      return Math.min(pev.speed * local_flSpeedMultiplier, local_flMaxSpeed);
     }
 
     void StopMoving()
     {
-      self.pev.velocity = g_vecZero;
-      self.pev.avelocity = g_vecZero;
+      pev.velocity = g_vecZero;
+      pev.avelocity = g_vecZero;
     }
 
     CPathTrack@ GetPathTrackByTarget(string target)

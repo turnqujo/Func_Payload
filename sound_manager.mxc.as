@@ -27,12 +27,12 @@ namespace FuncPayload
 
       if (m_sounds <= 0)
       {
-        self.pev.noise = "";
+        pev.noise = "";
         return;
       }
 
-      self.pev.noise = DEFAULT_MOVE_SOUND;
-      g_SoundSystem.PrecacheSound(self.pev.noise);
+      pev.noise = DEFAULT_MOVE_SOUND;
+      g_SoundSystem.PrecacheSound(pev.noise);
       g_SoundSystem.PrecacheSound(DEFAULT_STOP_SOUND);
     }
 
@@ -41,7 +41,7 @@ namespace FuncPayload
       if (NoSound() || currentSoundState == STOPPED)
         return;
 
-      g_SoundSystem.StopSound(self.edict(), CHAN_STATIC, self.pev.noise);
+      g_SoundSystem.StopSound(self.edict(), CHAN_STATIC, pev.noise);
       g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, DEFAULT_STOP_SOUND, m_flVolume, ATTN_NORM, 0, GetAdjustedPitch());
       currentSoundState = STOPPED;
     }
@@ -51,13 +51,13 @@ namespace FuncPayload
       if (NoSound() || currentSoundState == PLAYING)
         return;
 
-      g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, self.pev.noise, m_flVolume, ATTN_NORM, SND_CHANGE_PITCH, GetAdjustedPitch());
+      g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, pev.noise, m_flVolume, ATTN_NORM, SND_CHANGE_PITCH, GetAdjustedPitch());
       currentSoundState = PLAYING;
     }
 
     private bool NoSound()
     {
-      return string(self.pev.noise).IsEmpty();
+      return string(pev.noise).IsEmpty();
     }
 
     // NOTE: This method depends on the Movement Manager

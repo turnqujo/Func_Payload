@@ -20,14 +20,14 @@ namespace FuncPayload
 
     void Spawn()
     {
-      self.pev.velocity = g_vecZero;
-      self.pev.avelocity = g_vecZero;
-      self.pev.solid = SOLID_BSP;
-      self.pev.movetype = MOVETYPE_PUSH;
+      pev.velocity = g_vecZero;
+      pev.avelocity = g_vecZero;
+      pev.solid = SOLID_BSP;
+      pev.movetype = MOVETYPE_PUSH;
 
-      g_EntityFuncs.SetModel(self, self.pev.model);
-      g_EntityFuncs.SetSize(self.pev, self.pev.mins, self.pev.maxs);
-      g_EntityFuncs.SetOrigin(self, self.pev.origin);
+      g_EntityFuncs.SetModel(self, pev.model);
+      g_EntityFuncs.SetSize(pev, pev.mins, pev.maxs);
+      g_EntityFuncs.SetOrigin(self, pev.origin);
 
       Precache();
       MovePayloadToFirstTarget();
@@ -35,7 +35,7 @@ namespace FuncPayload
       SetSpeed(m_flStartSpeed);
 
       SetThink(ThinkFunction(this.Find));
-      NextThink(self.pev.ltime + THINK_TIME, false);
+      NextThink(pev.ltime + THINK_TIME, false);
     }
 
     void Precache()
@@ -55,7 +55,7 @@ namespace FuncPayload
       uint uiNumberAssisting = 0;
 
       CBaseEntity@ pEnt = null;
-      while((@pEnt = g_EntityFuncs.FindEntityInSphere(pEnt, self.pev.origin, m_iDetectionRadius, "*", "classname")) !is null) {
+      while((@pEnt = g_EntityFuncs.FindEntityInSphere(pEnt, pev.origin, m_iDetectionRadius, "*", "classname")) !is null) {
         if (pEnt is null || !pEnt.IsAlive())
           continue;
 
@@ -93,7 +93,7 @@ namespace FuncPayload
       }
 
       CleanUp();
-      NextThink(self.pev.ltime + THINK_TIME, false);
+      NextThink(pev.ltime + THINK_TIME, false);
     }
 
     private bool ShouldMove(bool isContested, bool isAssisted)
@@ -128,8 +128,8 @@ namespace FuncPayload
 
     void NextThink(float thinkTime, const bool alwaysThink)
     {
-      alwaysThink ? self.pev.flags |= FL_ALWAYSTHINK : self.pev.flags &= ~FL_ALWAYSTHINK;
-      self.pev.nextthink = thinkTime;
+      alwaysThink ? pev.flags |= FL_ALWAYSTHINK : pev.flags &= ~FL_ALWAYSTHINK;
+      pev.nextthink = thinkTime;
     }
   }
 

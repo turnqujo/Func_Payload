@@ -17,7 +17,7 @@ namespace FuncPayload
 
     void Use(CBaseEntity@ pActivator, CBaseEntity@ pCaller, USE_TYPE useType, float value)
     {
-      CBaseEntity@ pTargetPayload = g_EntityFuncs.FindEntityByTargetname(null, self.pev.target);
+      CBaseEntity@ pTargetPayload = g_EntityFuncs.FindEntityByTargetname(null, pev.target);
       if (pTargetPayload is null)
       {
         g_Game.AlertMessage(at_error, "Could not find target payload!\n");
