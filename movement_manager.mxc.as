@@ -12,8 +12,8 @@ namespace FuncPayload
   mixin class mxCMovementManager
   {
     CPathTrack@ pCurrentPath;
-    float local_flMaxSpeed = m_flMaxSpeed;
-    float local_flSpeedMultiplier = m_flSpeedMultiplier;
+    float flMaxSpeed = m_flMaxSpeed;
+    float flSpeedMultiplier = m_flSpeedMultiplier;
 
     void MovePayloadToFirstTarget()
     {
@@ -152,24 +152,24 @@ namespace FuncPayload
 
     void SetSpeed(float flNewSpeed)
     {
-      pev.speed = Math.min(flNewSpeed, local_flMaxSpeed);
+      pev.speed = Math.min(flNewSpeed, flMaxSpeed);
     }
 
     void SetMaxSpeed(float flNewMaxSpeed)
     {
-      local_flMaxSpeed = flNewMaxSpeed;
-      pev.impulse = int(local_flMaxSpeed);
+      flMaxSpeed = flNewMaxSpeed;
+      pev.impulse = int(flMaxSpeed);
       SetSpeed(pev.speed);
     }
 
     void SetSpeedMultiplier(float flMultiplier)
     {
-      local_flSpeedMultiplier = flMultiplier;
+      flSpeedMultiplier = flMultiplier;
     }
 
     float GetCurrentAdjustedSpeed()
     {
-      return Math.min(pev.speed * local_flSpeedMultiplier, local_flMaxSpeed);
+      return Math.min(pev.speed * flSpeedMultiplier, flMaxSpeed);
     }
 
     void StopMoving()
