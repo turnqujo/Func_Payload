@@ -16,7 +16,7 @@ namespace FuncPayload
    * Sound Manager
    *  Responsible for caching, playing, stopping, and other operations involving sound.
    */
-  mixin class mxCSoundManager
+  mixin class MXCSoundManager
   {
     eSoundState currentSoundState = STOPPED;
 

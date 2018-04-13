@@ -7,7 +7,7 @@ namespace FuncPayload
    * Responsible for keeping track of friendly and enemy entities in range
    *  of the payload, as well as performing actions on them (e.g. healing).
    */
-  mixin class mxCInRangeManager
+  mixin class MXCInRangeManager
   {
     array<CBaseMonster@> previousEntsInRange = array<CBaseMonster@>();
     array<CBaseMonster@> entsInRange = array<CBaseMonster@>();

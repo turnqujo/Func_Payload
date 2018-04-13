@@ -14,7 +14,7 @@ namespace FuncPayload
     FORCE_WAIT
   };
 
-  class CFuncPayload : ScriptBaseEntity, mxCFuncPayloadKeyVals, mxCInRangeManager, mxCMovementManager, mxCSoundManager
+  class CFuncPayload : ScriptBaseEntity, MXCFuncPayloadKeyVals, MXCInRangeManager, MXCMovementManager, MXCSoundManager
   {
     ePayloadState currentPayloadState = NORMAL;
 

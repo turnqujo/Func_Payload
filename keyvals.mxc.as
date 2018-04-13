@@ -1,6 +1,6 @@
 namespace FuncPayload
 {
-  mixin class mxCFuncPayloadKeyVals
+  mixin class MXCFuncPayloadKeyVals
   {
     float m_iDetectionRadius = 0;
     Vector m_vFriendlyGlowColor = parseVector("205, 10, 10");

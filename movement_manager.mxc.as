@@ -9,7 +9,7 @@ namespace FuncPayload
    * Movement Manager
    * Responsible for containing code related to moving, stopping, and pathing the payload.
    */
-  mixin class mxCMovementManager
+  mixin class MXCMovementManager
   {
     CPathTrack@ pCurrentPath;
     float flMaxSpeed = m_flMaxSpeed;
