@@ -59,8 +59,7 @@ namespace FuncPayload
         @pCurrentPath = pNextPath;
       }
 
-      // NOTE: Not sure what the significance of 10 is here
-      pev.velocity = (vDestination - pev.origin) * 10;
+      pev.velocity = (vDestination - pev.origin) * (1 / THINK_TIME);
       pev.avelocity = CalculateNewAngularVelocity(vAngles);
     }
 
@@ -102,10 +101,6 @@ namespace FuncPayload
         flNewX = 0;
       else
         flNewX = Math.AngleDistance(vAngles.x, pev.angles.x) * 10;
-
-      // TODO: Add custom keyval for maximum pitch
-      flNewX = flNewX > 45 ? 45.0 : flNewX;
-      flNewX = flNewX < -45 ? -45.0 : flNewX;
 
       Vector vNewAVelocity = pev.avelocity;
       vNewAVelocity.x = flNewX;
