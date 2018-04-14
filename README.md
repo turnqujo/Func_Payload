@@ -1,6 +1,5 @@
 # Func_Payload
-
-**Note that there's still quite a bit left to be done on this. It will likely have breaking changes soon.**
+Version: 1.0
 
 ## Installing
 - Clone the repo into your svencoop_addon/scripts/maps/{your_map}/ directory.
