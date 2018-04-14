@@ -1,21 +1,19 @@
 @SolidClass base(func_tracktrain) = func_payload : "Payload object"
 [
+  spawnflags(flags) =
+  [
+    32 : "Disable Friendly Glow" : 0
+    64 : "Disable Enemy Glow" : 0
+  ]
+
   iDetectionRadius(integer) : "Detection Radius" : 192
-  bShouldFriendliesGlow(choices) : "Enable friendly glow" : 1 =
-  [
-    0 : "No"
-    1 : "Yes"
-  ]
   friendlyGlowColor(color255) : "Friendly Glow Color (RGB)" : "10, 205, 205"
-  bShouldEnemiesGlow(choices) : "Enable enemy glow" : 1 =
-  [
-    0 : "No"
-    1 : "Yes"
-  ]
   enemyGlowColor(color255) : "Enemy Glow Color (RGB)" : "205, 10, 10"
   flSpeedMultiplier(string) : "Speed multiplier per friendly" : 1
   uiSpeedMultiplierMax(integer) : "Max number of multiplies" : 3
   flMaxSpeed(string) : "Max Speed" : "256.0"
+  flFriendlyHealthModifier(string) : "Amount to heal or hurt friendlies in range by": 0
+  flEnemyHealthModifier(string) : "Amount to heal or hurt enemies in range by": 0
 ]
 
 @PointClass base(Targetname, Target) color(133 19 112) = trigger_payload_mode : "Trigger Payload Movement Mode"

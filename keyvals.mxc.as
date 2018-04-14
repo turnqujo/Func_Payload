@@ -1,5 +1,12 @@
 namespace FuncPayload
 {
+  enum FuncPayloadFlags
+  {
+  	SF_PAYLOAD_NOPITCH = 1 << 0,
+    SF_DISABLE_FRIENDLY_GLOW = 32 << 0,
+    SF_DISABLE_ENEMY_GLOW = 64 << 0
+  };
+
   mixin class MXCFuncPayloadKeyVals
   {
     float m_iDetectionRadius = 0;
@@ -9,13 +16,13 @@ namespace FuncPayload
     float m_flLength; // Wheels
     float m_flStartSpeed;
     float m_flBank;
-    bool m_bShouldFriendliesGlow;
-    bool m_bShouldEnemiesGlow;
     float m_flSpeedMultiplier = 1.0;
     uint m_uiSpeedMultiplierMax = 3;
     int m_sounds;
     float m_flVolume;
     float m_flMaxSpeed;
+    float m_flFriendlyHealthModifier;
+    float m_flEnemyHealthModifier;
 
     bool KeyValue(const string & in szKey, const string & in szValue)
     {
@@ -61,18 +68,6 @@ namespace FuncPayload
         return true;
       }
 
-      if (szKey == "bShouldFriendliesGlow")
-      {
-        m_bShouldFriendliesGlow = szValue == 0 ? false : true;
-        return true;
-      }
-
-      if (szKey == "bShouldEnemiesGlow")
-      {
-        m_bShouldEnemiesGlow = szValue == 0 ? false : true;
-        return true;
-      }
-
       if (szKey == "flSpeedMultiplier")
       {
         m_flSpeedMultiplier = atof(szValue);
@@ -93,7 +88,7 @@ namespace FuncPayload
 
       if (szKey == "volume")
       {
-        m_flVolume = float(atoi(szValue));
+        m_flVolume = atof(szValue);
         m_flVolume *= 0.1;
         return true;
       }
@@ -101,6 +96,18 @@ namespace FuncPayload
       if (szKey == "flMaxSpeed")
       {
         m_flMaxSpeed = atof(szValue);
+        return true;
+      }
+
+      if (szKey == "flFriendlyHealthModifier")
+      {
+        m_flFriendlyHealthModifier = atof(szValue);
+        return true;
+      }
+
+      if (szKey == "flEnemyHealthModifier")
+      {
+        m_flEnemyHealthModifier = atof(szValue);
         return true;
       }
 

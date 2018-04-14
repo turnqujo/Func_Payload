@@ -1,9 +1,5 @@
 namespace FuncPayload
 {
-  enum FuncPayloadFlags
-  {
-  	SF_PAYLOAD_NOPITCH = 1 << 0
-  };
 
   /**
    * Movement Manager
