@@ -6,8 +6,6 @@ namespace FuncPayload
     STOPPED
   };
 
-  const string DEFAULT_MOVE_SOUND = "plats/talkmove2.wav";
-  const string DEFAULT_STOP_SOUND = "plats/talkstop1.wav";
   const int INITIAL_PITCH = 60;
   const int MAX_PITCH = 200;
   const int APPROX_MAX_SPEED = 1000;
@@ -19,21 +17,42 @@ namespace FuncPayload
   mixin class MXCSoundManager
   {
     eSoundState currentSoundState = STOPPED;
+    string szStopSound = "plats/ttrain_brake1.wav";
 
     void PrecacheSounds()
     {
       if (m_flVolume == 0.0)
         m_flVolume = 1.0;
 
-      if (m_sounds <= 0)
+      switch (m_sounds)
       {
-        pev.noise = "";
-        return;
+        case 1: pev.noise = "plats/ttrain1.wav"; break;
+        case 2: pev.noise = "plats/ttrain2.wav"; break;
+        case 3: pev.noise = "plats/ttrain3.wav"; break;
+        case 4: pev.noise = "plats/ttrain4.wav"; break;
+        case 5: pev.noise = "plats/ttrain6.wav"; break;
+        case 6: pev.noise = "plats/ttrain7.wav"; break;
+        default: pev.noise = ""; break;
       }
 
-      pev.noise = DEFAULT_MOVE_SOUND;
-      g_SoundSystem.PrecacheSound(pev.noise);
-      g_SoundSystem.PrecacheSound(DEFAULT_STOP_SOUND);
+      switch (m_iStopSound)
+      {
+        case 1: szStopSound = "plats/bigstop1.wav"; break;
+        case 2: szStopSound = "plats/bigstop1.wav"; break;
+        case 3: szStopSound = "plats/freightstop1.wav"; break;
+        case 4: szStopSound = "plats/heavystop1.wav"; break;
+        case 5: szStopSound = "plats/rackstop1.wav"; break;
+        case 6: szStopSound = "plats/railstop1.wav"; break;
+        case 7: szStopSound = "plats/squeekstop1.wav"; break;
+        case 8: szStopSound = "plats/heavystop2.wav"; break;
+        default: szStopSound = ""; break;
+      }
+
+      if (pev.noise != "")
+        g_SoundSystem.PrecacheSound(pev.noise);
+
+      if (szStopSound != "")
+        g_SoundSystem.PrecacheSound(szStopSound);
     }
 
     void StopSound()
@@ -42,7 +61,10 @@ namespace FuncPayload
         return;
 
       g_SoundSystem.StopSound(self.edict(), CHAN_STATIC, pev.noise);
-      g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, DEFAULT_STOP_SOUND, m_flVolume, ATTN_NORM, 0, GetAdjustedPitch());
+
+      if (szStopSound != "")
+        g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, szStopSound, m_flVolume, ATTN_NORM, 0, GetAdjustedPitch());
+
       currentSoundState = STOPPED;
     }
 

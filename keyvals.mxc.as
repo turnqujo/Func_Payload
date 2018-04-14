@@ -19,6 +19,7 @@ namespace FuncPayload
     float m_flSpeedMultiplier = 1.0;
     uint m_uiSpeedMultiplierMax = 3;
     int m_sounds;
+    int m_iStopSound;
     float m_flVolume;
     float m_flMaxSpeed;
     float m_flFriendlyHealthModifier;
@@ -83,6 +84,12 @@ namespace FuncPayload
       if (szKey == 'sounds')
       {
         m_sounds = atoi(szValue);
+        return true;
+      }
+
+      if (szKey == "iStopSound")
+      {
+        m_iStopSound = atoi(szValue);
         return true;
       }
 

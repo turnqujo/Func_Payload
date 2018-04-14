@@ -14,6 +14,19 @@
   flMaxSpeed(string) : "Max Speed" : "256.0"
   flFriendlyHealthModifier(string) : "Amount to heal or hurt friendlies in range by": 0
   flEnemyHealthModifier(string) : "Amount to heal or hurt enemies in range by": 0
+
+  iStopSound(choices) : "Stop Sound" : 0 =
+  [
+    0: "No Sound"
+    1: "big elev stop1"
+    2: "big elev stop2"
+    3: "freight elev stop"
+    4: "heavy elev stop"
+    5: "rack stop"
+    6: "rail stop"
+    7: "squeek stop"
+    8: "quick stop"
+  ]
 ]
 
 @PointClass base(Targetname, Target) color(133 19 112) = trigger_payload_mode : "Trigger Payload Movement Mode"
