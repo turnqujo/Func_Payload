@@ -63,63 +63,6 @@ namespace FuncPayload
       pev.avelocity = CalculateNewAngularVelocity(vAngles);
     }
 
-    void FirePathTarget(CPathTrack@ pFire)
-    {
-      if (string(pFire.pev.message).IsEmpty())
-        return;
-
-      g_EntityFuncs.FireTargets(string(pFire.pev.message), self, self, USE_TOGGLE, 0);
-
-      if (pFire.pev.SpawnFlagBitSet(SF_PATH_FIREONCE))
-        pFire.pev.message = 0;
-    }
-
-    void UpdateSpeedsFromPath(CPathTrack@ pFire)
-    {
-      if (pFire.pev.speed != 0)
-        ForceSetSpeed(pFire.pev.speed);
-
-      if (pFire.m_flMaxSpeed >= 0)
-        SetMaxSpeed(pFire.m_flMaxSpeed);
-
-      if (pFire.m_flMaxSpeed == -1)
-        SetMaxSpeed(m_flMaxSpeed);
-
-      if (pFire.m_flNewSpeed >= 0)
-        SetSpeed(pFire.m_flNewSpeed);
-
-      if (pFire.m_flNewSpeed == -1)
-        SetSpeed(m_flStartSpeed);
-    }
-
-    // NOTE: The outcome of this function depends on the payload's angles and
-    //       velocity when it's called
-    Vector CalculateNewAngularVelocity(Vector vAngles)
-    {
-      float flNewX;
-      if(pev.SpawnFlagBitSet(SF_PAYLOAD_NOPITCH))
-        flNewX = 0;
-      else
-        flNewX = Math.AngleDistance(vAngles.x, pev.angles.x) * 10;
-
-      Vector vNewAVelocity = pev.avelocity;
-      vNewAVelocity.x = flNewX;
-      vNewAVelocity.y = Math.AngleDistance(vAngles.y, pev.angles.y) * 10;
-
-      if (m_flBank == 0)
-        return vNewAVelocity;
-
-      float flBank = 0;
-      if (vNewAVelocity.y < -5)
-        flBank = -m_flBank;
-
-      if (vNewAVelocity.y > 5)
-        flBank = m_flBank;
-
-      vNewAVelocity.z = Math.AngleDistance(Math.ApproachAngle(flBank, pev.angles.z, m_flBank * 4), pev.angles.z) * 4;
-      return vNewAVelocity;
-    }
-
     // NOTE: This is when an entity is in front of the payload, not necessarily contested
     void Blocked(CBaseEntity@ pBlockingEnt)
     {
@@ -167,6 +110,63 @@ namespace FuncPayload
     {
       pev.velocity = g_vecZero;
       pev.avelocity = g_vecZero;
+    }
+
+    private void FirePathTarget(CPathTrack@ pFire)
+    {
+      if (string(pFire.pev.message).IsEmpty())
+        return;
+
+      g_EntityFuncs.FireTargets(string(pFire.pev.message), self, self, USE_TOGGLE, 0);
+
+      if (pFire.pev.SpawnFlagBitSet(SF_PATH_FIREONCE))
+        pFire.pev.message = 0;
+    }
+
+    private void UpdateSpeedsFromPath(CPathTrack@ pFire)
+    {
+      if (pFire.pev.speed != 0)
+        ForceSetSpeed(pFire.pev.speed);
+
+      if (pFire.m_flMaxSpeed >= 0)
+        SetMaxSpeed(pFire.m_flMaxSpeed);
+
+      if (pFire.m_flMaxSpeed == -1)
+        SetMaxSpeed(m_flMaxSpeed);
+
+      if (pFire.m_flNewSpeed >= 0)
+        SetSpeed(pFire.m_flNewSpeed);
+
+      if (pFire.m_flNewSpeed == -1)
+        SetSpeed(m_flStartSpeed);
+    }
+
+    // NOTE: The outcome of this function depends on the payload's angles and
+    //       velocity when it's called
+    private Vector CalculateNewAngularVelocity(Vector vAngles)
+    {
+      float flNewX;
+      if(pev.SpawnFlagBitSet(SF_PAYLOAD_NOPITCH))
+        flNewX = 0;
+      else
+        flNewX = Math.AngleDistance(vAngles.x, pev.angles.x) * 10;
+
+      Vector vNewAVelocity = pev.avelocity;
+      vNewAVelocity.x = flNewX;
+      vNewAVelocity.y = Math.AngleDistance(vAngles.y, pev.angles.y) * 10;
+
+      if (m_flBank == 0)
+        return vNewAVelocity;
+
+      float flBank = 0;
+      if (vNewAVelocity.y < -5)
+        flBank = -m_flBank;
+
+      if (vNewAVelocity.y > 5)
+        flBank = m_flBank;
+
+      vNewAVelocity.z = Math.AngleDistance(Math.ApproachAngle(flBank, pev.angles.z, m_flBank * 4), pev.angles.z) * 4;
+      return vNewAVelocity;
     }
 
     CPathTrack@ GetPathTrackByTarget(string target)

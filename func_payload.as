@@ -126,7 +126,7 @@ namespace FuncPayload
       return relationship > 0;
     }
 
-    void NextThink(float thinkTime, const bool alwaysThink)
+    private void NextThink(float thinkTime, const bool alwaysThink)
     {
       alwaysThink ? pev.flags |= FL_ALWAYSTHINK : pev.flags &= ~FL_ALWAYSTHINK;
       pev.nextthink = thinkTime;
